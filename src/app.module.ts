@@ -17,7 +17,7 @@ import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
       port: 3307,
       username: "user_crud",
       password: "root",
-      database: "db_rent-a-car",
+      database: "db_rent_a_car",
       autoLoadEntities: true,
       synchronize: true,
     }),

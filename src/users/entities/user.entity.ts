@@ -1,33 +1,36 @@
 import { Role } from "src/roles/entities/role.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @Column()
+    @Column({ unique: true })
     username: string;
   
     @Column()
     password: string;
   
-    @ManyToOne(() => Role)
+    @ManyToOne(() => Role, { eager: true })
     @JoinColumn({ name: 'role_id' })
     role: Role;
   
-    @Column()
+    @Column({ unique: true })
     email: string;
   
-    @Column()
+    @Column({ nullable: true })
     first_name: string;
   
-    @Column()
+    @Column({ nullable: true })
     last_name: string;
   
     @Column({ nullable: true })
     avatar: string;
   
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
+
+    @DeleteDateColumn({ type: 'timestamp', nullable: true })
+    deleteDate: Date;
 }
