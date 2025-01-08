@@ -1,26 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOtherFeatureDto } from './dto/create-other_feature.dto';
 import { UpdateOtherFeatureDto } from './dto/update-other_feature.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OtherFeature } from './entities/other_feature.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class OtherFeaturesService {
-  create(createOtherFeatureDto: CreateOtherFeatureDto) {
-    return 'This action adds a new otherFeature';
+
+  constructor(
+    @InjectRepository(OtherFeature)
+    private readonly otherFeaturesRepository: Repository<OtherFeature>,
+  ) {}
+
+  async create(createOtherFeatureDto: CreateOtherFeatureDto): Promise<OtherFeature> {
+    return await this.otherFeaturesRepository.save(createOtherFeatureDto);
   }
 
-  findAll() {
-    return `This action returns all otherFeatures`;
+  async findAll(): Promise<OtherFeature[]> {
+    return await this.otherFeaturesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} otherFeature`;
+  async findOne(id: number): Promise<OtherFeature> {
+    const otherFeature = await this.otherFeaturesRepository.findOneBy({ id });
+    if (!otherFeature) throw new NotFoundException(`No se encontro caracteristica con id ${ id }`);
+    return otherFeature;
+  }
+  
+  async update(id: number, updateOtherFeatureDto: UpdateOtherFeatureDto): Promise<OtherFeature> {
+    const otherFeature = await this.otherFeaturesRepository.findOneBy({ id });
+    if (!otherFeature) throw new NotFoundException(`No se encontro caracteristica con id ${ id }`);
+    Object.assign(otherFeature, updateOtherFeatureDto);
+
+    return await this.otherFeaturesRepository.save(otherFeature);
   }
 
-  update(id: number, updateOtherFeatureDto: UpdateOtherFeatureDto) {
-    return `This action updates a #${id} otherFeature`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} otherFeature`;
+  async remove(id: number): Promise<OtherFeature> {
+    const otherFeature = await this.otherFeaturesRepository.findOneBy({ id })
+    if (!otherFeature) throw new NotFoundException(`No existe caracteristica con id ${ id }`);
+    return await this.otherFeaturesRepository.remove(otherFeature);
   }
 }

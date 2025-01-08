@@ -1,7 +1,7 @@
 import { MainFeature } from "src/main_features/entities/main_feature.entity";
 import { OtherFeature } from "src/other_features/entities/other_feature.entity";
 import { VehicleType } from "src/vehicle_types/entities/vehicle_type.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Car {
@@ -21,17 +21,37 @@ export class Car {
     @JoinColumn({ name: 'main_features_id' })
     main_features: MainFeature;
   
-    @ManyToOne(() => OtherFeature)
-    @JoinColumn({ name: 'other_features_id' })
-    other_features: OtherFeature;
+    @ManyToMany(() => OtherFeature)
+    @JoinTable({
+        name: 'car_other_features',
+        joinColumn: {
+            name: 'car_id',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'other_features_id',
+            referencedColumnName: 'id'
+        }
+     })
+    other_features: OtherFeature[];
   
-    @ManyToOne(() => VehicleType)
-    @JoinColumn({ name: 'vehicle_type_id' })
-    vehicle_type: VehicleType;
+    @ManyToMany(() => VehicleType)
+    @JoinTable({ 
+        name: 'car_vehicle_types',    
+        joinColumn: {
+            name: 'car_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'vehicle_type_id',
+            referencedColumnName: 'id',
+        },
+    })
+    vehicle_type: VehicleType[];
   
     @Column()
     updated_by: number;
   
-    @Column({ type: 'timestamp' })
-    created_at: Date;
+    @UpdateDateColumn({ type: 'timestamp' })
+    updated_at: Date;
 }

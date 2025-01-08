@@ -2,33 +2,29 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { MainFeaturesService } from './main_features.service';
 import { CreateMainFeatureDto } from './dto/create-main_feature.dto';
 import { UpdateMainFeatureDto } from './dto/update-main_feature.dto';
+import { MainFeature } from './entities/main_feature.entity';
 
 @Controller('main-features')
 export class MainFeaturesController {
   constructor(private readonly mainFeaturesService: MainFeaturesService) {}
 
   @Post()
-  create(@Body() createMainFeatureDto: CreateMainFeatureDto) {
-    return this.mainFeaturesService.create(createMainFeatureDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.mainFeaturesService.findAll();
+  async create(@Body() createMainFeatureDto: CreateMainFeatureDto): Promise<MainFeature> {
+    return await this.mainFeaturesService.create(createMainFeatureDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mainFeaturesService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<MainFeature> {
+    return await this.mainFeaturesService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMainFeatureDto: UpdateMainFeatureDto) {
-    return this.mainFeaturesService.update(+id, updateMainFeatureDto);
+  async update(@Param('id') id: string, @Body() updateMainFeatureDto: UpdateMainFeatureDto): Promise<MainFeature> {
+    return await this.mainFeaturesService.update(+id, updateMainFeatureDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mainFeaturesService.remove(+id);
+  async remove(@Param('id') id: string): Promise<MainFeature> {
+    return await this.mainFeaturesService.remove(+id);
   }
 }

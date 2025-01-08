@@ -1,5 +1,5 @@
 import { GearboxType } from "src/common/enums/gearbox.enum";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class MainFeature {
@@ -23,4 +23,7 @@ export class MainFeature {
   
     @Column()
     updated_by: number;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    updated_at: Date;
 }

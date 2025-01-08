@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class OtherFeature {
@@ -16,4 +16,7 @@ export class OtherFeature {
 
   @Column()
   updated_by: number;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 }

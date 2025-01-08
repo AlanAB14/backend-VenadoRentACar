@@ -1,26 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMainFeatureDto } from './dto/create-main_feature.dto';
 import { UpdateMainFeatureDto } from './dto/update-main_feature.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MainFeature } from './entities/main_feature.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MainFeaturesService {
-  create(createMainFeatureDto: CreateMainFeatureDto) {
-    return 'This action adds a new mainFeature';
+
+  constructor(
+    @InjectRepository(MainFeature)
+    private readonly mainFeaturesRepository: Repository<MainFeature>,
+  ) {}
+
+  async create(createMainFeatureDto: CreateMainFeatureDto): Promise<MainFeature> {
+    return await this.mainFeaturesRepository.save(createMainFeatureDto);
   }
 
-  findAll() {
-    return `This action returns all mainFeatures`;
+  async findOne(id: number): Promise<MainFeature> {
+    const mainFeatures = await this.mainFeaturesRepository.findOneBy({ id });
+    if (!mainFeatures) throw new NotFoundException(`No se encontraron caracteristicas para el id ${ id }`);
+    return mainFeatures;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} mainFeature`;
+  async update(id: number, updateMainFeatureDto: UpdateMainFeatureDto): Promise<MainFeature> {
+    const mainFeatures = await this.mainFeaturesRepository.findOneBy({ id })
+    if (!mainFeatures) throw new NotFoundException(`No existen caracteristicas con id ${ id }`);
+    Object.assign(mainFeatures, updateMainFeatureDto, {
+      updated_at: new Date(),
+    });
+
+    return await this.mainFeaturesRepository.save(mainFeatures);
   }
 
-  update(id: number, updateMainFeatureDto: UpdateMainFeatureDto) {
-    return `This action updates a #${id} mainFeature`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} mainFeature`;
+  async remove(id: number) : Promise<MainFeature>{
+    const mainFeature = await this.mainFeaturesRepository.findOneBy({ id })
+    if (!mainFeature) throw new NotFoundException(`No existe caracteristica con id ${ id }`);
+    return await this.mainFeaturesRepository.remove(mainFeature);
   }
 }
