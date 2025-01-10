@@ -1,7 +1,7 @@
 import { MainFeature } from "src/main_features/entities/main_feature.entity";
 import { OtherFeature } from "src/other_features/entities/other_feature.entity";
 import { VehicleType } from "src/vehicle_types/entities/vehicle_type.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Car {
@@ -10,6 +10,9 @@ export class Car {
   
     @Column()
     name: string;
+
+    @Column({ nullable: true })
+    description?: string;
   
     @Column()
     image: string;
@@ -17,11 +20,11 @@ export class Car {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     price_per_day: number;
   
-    @ManyToOne(() => MainFeature)
-    @JoinColumn({ name: 'main_features_id' })
-    main_features: MainFeature;
+    @ManyToOne(() => MainFeature, { eager: true })
+    @JoinColumn({ name: 'main_features' })
+    main_features?: MainFeature;
   
-    @ManyToMany(() => OtherFeature)
+    @ManyToMany(() => OtherFeature, { eager: true })
     @JoinTable({
         name: 'car_other_features',
         joinColumn: {
@@ -33,9 +36,9 @@ export class Car {
             referencedColumnName: 'id'
         }
      })
-    other_features: OtherFeature[];
+    other_features?: OtherFeature[];
   
-    @ManyToMany(() => VehicleType)
+    @ManyToMany(() => VehicleType, { eager: true })
     @JoinTable({ 
         name: 'car_vehicle_types',    
         joinColumn: {
@@ -54,4 +57,7 @@ export class Car {
   
     @UpdateDateColumn({ type: 'timestamp' })
     updated_at: Date;
+
+    @DeleteDateColumn({ type: 'timestamp', nullable: true })
+    deleteDate: Date;
 }

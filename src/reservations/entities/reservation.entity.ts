@@ -1,15 +1,15 @@
 import { Car } from "src/cars/entities/car.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Reservation {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @Column()
-    reservation_number: number;
+    @Column({ default: '0' })
+    reservation_number: string;
   
-    @ManyToOne(() => Car)
+    @ManyToOne(() => Car, { eager: true })
     @JoinColumn({ name: 'car_id' })
     car: Car;
   
@@ -33,4 +33,7 @@ export class Reservation {
   
     @Column({ nullable: true })
     observation: string;
+
+    @DeleteDateColumn({ type: 'timestamp', nullable: true })
+    deleteDate: Date;
 }

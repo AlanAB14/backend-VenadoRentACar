@@ -5,22 +5,26 @@ export class CreateCarDto {
     @IsString()
     name: string;
   
+    @IsString()
+    @IsOptional()
+    description?: string;
+
     @IsNotEmpty()
     @IsString()
     image: string;
   
     @IsNotEmpty()
-    @IsDecimal({ decimal_digits: '0,2' })
+    @IsNumber()
     price_per_day: number;
   
     @IsOptional()
     @IsNumber()
-    main_features_id?: number;
+    main_features?: number;
   
     @IsOptional()
     @IsArray()
     @IsNumber({}, { each: true })
-    other_features_id?: number[];
+    other_features?: number[];
   
     @IsNotEmpty()
     @IsArray()

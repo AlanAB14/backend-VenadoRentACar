@@ -8,6 +8,7 @@ import { CarsModule } from './cars/cars.module';
 import { MainFeaturesModule } from './main_features/main_features.module';
 import { OtherFeaturesModule } from './other_features/other_features.module';
 import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
       database: "db_rent_a_car",
       autoLoadEntities: true,
       synchronize: true,
+      timezone: '-03:00' //Zona horaria de Argentina
     }),
     RolesModule,
     UsersModule,
@@ -29,6 +31,7 @@ import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
     MainFeaturesModule,
     OtherFeaturesModule,
     VehicleTypesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
