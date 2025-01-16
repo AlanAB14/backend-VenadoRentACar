@@ -11,13 +11,12 @@ export class VehicleTypesController {
   constructor(private readonly vehicleTypesService: VehicleTypesService) {}
 
   @UseGuards(AuthGuard)
+  @Roles('admin')
   @Post()
   async create(@Body() createVehicleTypeDto: CreateVehicleTypeDto): Promise<VehicleType>{
     return await this.vehicleTypesService.create(createVehicleTypeDto);
   }
-
-  @UseGuards(AuthGuard)
-  @Roles('admin')
+  
   @Get()
   async findAll(): Promise<VehicleType[]> {
     return await this.vehicleTypesService.findAll();
@@ -28,11 +27,15 @@ export class VehicleTypesController {
     return await this.vehicleTypesService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard)
+  @Roles('admin')
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateVehicleTypeDto: UpdateVehicleTypeDto): Promise<VehicleType> {
     return await this.vehicleTypesService.update(+id, updateVehicleTypeDto);
   }
 
+  @UseGuards(AuthGuard)
+  @Roles('super_admin')
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<VehicleType> {
     return await this.vehicleTypesService.remove(+id);

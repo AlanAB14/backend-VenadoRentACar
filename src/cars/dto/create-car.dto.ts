@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { IsArray, IsDecimal, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateCarDto {
@@ -9,9 +10,11 @@ export class CreateCarDto {
     @IsOptional()
     description?: string;
 
+    @Exclude()
     @IsNotEmpty()
-    @IsString()
-    image: string;
+    @IsNumber({}, { each: true })
+    @IsArray()
+    images?: number[];
   
     @IsNotEmpty()
     @IsNumber()

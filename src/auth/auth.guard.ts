@@ -15,7 +15,11 @@ export class AuthGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
-
+    const roleHierarchy = {
+      super_admin: ['super_admin', 'admin', 'guest'],
+      admin: ['admin', 'guest'],
+      guest: ['guest'],
+    };
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
@@ -32,14 +36,21 @@ export class AuthGuard implements CanActivate {
       request['user'] = payload;
       
       const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
-      console.log(payload)
-      console.log(requiredRoles)
-      if (requiredRoles && !requiredRoles.includes(payload.role)) {
-        throw new ForbiddenException('No tienes permisos para acceder a este recurso');
+      if ( requiredRoles ) {
+        const userRole = payload.role?.type;
+        if (!userRole || !roleHierarchy[userRole]) {
+          throw new ForbiddenException('Rol de usuario no válido o no autorizado.');
+        }
+        const allowedRoles = roleHierarchy[userRole] || [];
+        const hasPermission = requiredRoles.some((role) => allowedRoles.includes(role));
+        if (!hasPermission) {
+          throw new ForbiddenException('No tienes permisos para acceder a este recurso');
+        }
       }
 
-    } catch {
-      throw new UnauthorizedException();
+    } catch(error) {
+      console.error('Error en AuthGuard:', error);
+      throw new UnauthorizedException(error.message);
     }
     return true;
   }

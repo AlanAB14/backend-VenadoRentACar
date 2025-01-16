@@ -1,9 +1,9 @@
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateOtherFeatureDto {
     @IsString()
-    @IsNotEmpty()
-    icon: string;
+    @IsOptional()
+    icon?: string;
     
     @IsString()
     @IsNotEmpty()

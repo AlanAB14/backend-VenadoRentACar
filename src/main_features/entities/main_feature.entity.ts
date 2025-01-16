@@ -1,5 +1,6 @@
 import { GearboxType } from "src/common/enums/gearbox.enum";
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class MainFeature {
@@ -21,8 +22,9 @@ export class MainFeature {
     @Column({ type: 'enum', enum: GearboxType })
     gearbox: GearboxType;
   
-    @Column()
-    updated_by: number;
+    @ManyToOne(() => User, { nullable: true, eager: true })
+    @JoinColumn({ name: 'updated_by' })
+    updated_by: User;
 
     @UpdateDateColumn({ type: 'timestamp' })
     updated_at: Date;

@@ -1,19 +1,20 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class OtherFeature {
+export class CarImage {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  icon: string;
-
-  @Column()
-  title: string;
-
-  @Column()
-  description: string;
+  imageUrl: string;
 
   @ManyToOne(() => User, { nullable: true, eager: true })
   @JoinColumn({ name: 'updated_by' })

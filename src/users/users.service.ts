@@ -6,7 +6,8 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Role } from 'src/roles/entities/role.entity';
 import * as bcryptjs from 'bcryptjs';
-
+import * as path from 'path';
+import * as fs from 'fs';
 @Injectable()
 export class UsersService {
 
@@ -28,6 +29,7 @@ export class UsersService {
       password: hashPassword,
       role,
       ...userData,
+      avatar: createUserDto.avatar_image ?? null,
     });
 
     return await this.userRepository.save(user);
@@ -46,6 +48,15 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const usuario = await this.userRepository.findOneBy({ id });
     if ( !usuario ) throw new NotFoundException(`No existe usuario con id ${ id }`);
+    if (updateUserDto.avatar_image) {
+      if (usuario.avatar) {
+        const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', path.basename(usuario.avatar));
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+      usuario.avatar = updateUserDto.avatar_image;
+    }
 
     if ( updateUserDto.role_id ) {
       const role = await this.roleRepository.findOne({ where: { id: updateUserDto.role_id } });
@@ -57,6 +68,7 @@ export class UsersService {
       const hashPassword = await bcryptjs.hash(updateUserDto.password, 10);
       usuario.password = hashPassword;
     }
+
 
     return await this.userRepository.save(usuario);
   }

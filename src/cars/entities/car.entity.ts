@@ -1,5 +1,7 @@
+import { CarImage } from "src/car-images/entities/car-image.entity";
 import { MainFeature } from "src/main_features/entities/main_feature.entity";
 import { OtherFeature } from "src/other_features/entities/other_feature.entity";
+import { User } from "src/users/entities/user.entity";
 import { VehicleType } from "src/vehicle_types/entities/vehicle_type.entity";
 import { Column, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -14,8 +16,19 @@ export class Car {
     @Column({ nullable: true })
     description?: string;
   
-    @Column()
-    image: string;
+    @ManyToMany(() => CarImage, { eager: true })
+    @JoinTable({
+        name: 'car_relation_images',
+        joinColumn: {
+            name: 'car_id',
+            referencedColumnName: 'id'
+        },
+        inverseJoinColumn: {
+            name: 'car_image_id',
+            referencedColumnName: 'id'
+        }
+    })
+    car_images?: CarImage[];
   
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     price_per_day: number;
@@ -52,8 +65,9 @@ export class Car {
     })
     vehicle_type: VehicleType[];
   
-    @Column()
-    updated_by: number;
+    @ManyToOne(() => User, { nullable: true, eager: true })
+    @JoinColumn({ name: 'updated_by' })
+    updated_by: User;
   
     @UpdateDateColumn({ type: 'timestamp' })
     updated_at: Date;

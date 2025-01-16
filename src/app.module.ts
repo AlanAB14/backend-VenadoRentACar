@@ -9,6 +9,9 @@ import { MainFeaturesModule } from './main_features/main_features.module';
 import { OtherFeaturesModule } from './other_features/other_features.module';
 import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
 import { AuthModule } from './auth/auth.module';
+import { CarImagesModule } from './car-images/car-images.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { MulterConfigService } from './common/middlewares/multer-configuration';
 
 @Module({
   imports: [
@@ -32,6 +35,7 @@ import { AuthModule } from './auth/auth.module';
     OtherFeaturesModule,
     VehicleTypesModule,
     AuthModule,
+    CarImagesModule,
   ],
   controllers: [],
   providers: [],
