@@ -8,18 +8,19 @@ import { OtherFeaturesModule } from 'src/other_features/other_features.module';
 import { UsersModule } from 'src/users/users.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterConfigService } from 'src/common/middlewares/multer-configuration';
-import { CarImagesModule } from 'src/car-images/car-images.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Car]),
     VehicleTypesModule,
     OtherFeaturesModule,
-    CarImagesModule,
     UsersModule,
+     MulterModule.registerAsync({
+      useClass: MulterConfigService,
+    }),
   ],
   controllers: [CarsController],
-  providers: [CarsService],
+  providers: [CarsService, MulterConfigService],
   exports: [TypeOrmModule],
 })
 export class CarsModule {}

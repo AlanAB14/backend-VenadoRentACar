@@ -1,4 +1,3 @@
-import { CarImage } from "src/car-images/entities/car-image.entity";
 import { MainFeature } from "src/main_features/entities/main_feature.entity";
 import { OtherFeature } from "src/other_features/entities/other_feature.entity";
 import { User } from "src/users/entities/user.entity";
@@ -15,21 +14,10 @@ export class Car {
 
     @Column({ nullable: true })
     description?: string;
-  
-    @ManyToMany(() => CarImage, { eager: true })
-    @JoinTable({
-        name: 'car_relation_images',
-        joinColumn: {
-            name: 'car_id',
-            referencedColumnName: 'id'
-        },
-        inverseJoinColumn: {
-            name: 'car_image_id',
-            referencedColumnName: 'id'
-        }
-    })
-    car_images?: CarImage[];
-  
+
+    @Column({ type: 'simple-array', nullable: true })
+    images?: string[];
+    
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     price_per_day: number;
   

@@ -10,11 +10,10 @@ export class CreateCarDto {
     @IsOptional()
     description?: string;
 
-    @Exclude()
-    @IsNotEmpty()
-    @IsNumber({}, { each: true })
+    @IsOptional()
+    @IsString({ each: true })
     @IsArray()
-    images?: number[];
+    images?: string[];
   
     @IsNotEmpty()
     @IsNumber()

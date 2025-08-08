@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UpdatedByInterceptor } from 'src/common/updatedBy.interceptor';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { MulterConfigService } from 'src/common/middlewares/multer-configuration';
 
 @Controller('cars')
 export class CarsController {
@@ -15,12 +16,15 @@ export class CarsController {
   @Roles('admin')
   @Post()
   @UseInterceptors(UpdatedByInterceptor)
+  @UseInterceptors(FilesInterceptor('images')) 
   create(
     @Body() createCarDto: CreateCarDto,
-    //@UploadedFiles() files?: Express.Multer.File[]
+    @UploadedFiles() files?: Express.Multer.File[]
   ) {
-    //const filePaths = files.map(file => `/uploads/images/${file.filename}`); // Rutas de los archivos
-    //createCarDto.images = filePaths;
+    if (files) {
+      const filePaths = files.map(file => `/uploads/images/${file.filename}`);
+      createCarDto.images = filePaths as any;
+    }
     return this.carsService.create(createCarDto, createCarDto.updated_by);
   }
 
@@ -38,15 +42,16 @@ export class CarsController {
   @Roles('admin')
   @Patch(':id')
   @UseInterceptors(UpdatedByInterceptor)
+  @UseInterceptors(FilesInterceptor('images')) 
   async update(
     @Param('id') id: string, 
     @Body() updateCarDto: UpdateCarDto,
-    //@UploadedFiles() files?: Express.Multer.File[]
+    @UploadedFiles() files?: Express.Multer.File[]
   ) {
-    // if (files) {
-    //   const filePaths = files.map(file => `/uploads/images/${file.filename}`); // Rutas de los archivos
-    //   updateCarDto.images = filePaths;
-    // }
+    if (files) {
+      const filePaths = files.map(file => `/uploads/images/${file.filename}`);
+      updateCarDto.images = filePaths as any;
+    }
     return await this.carsService.update(+id, updateCarDto, updateCarDto.updated_by);
   }
 

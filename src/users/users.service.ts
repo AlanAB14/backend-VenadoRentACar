@@ -64,6 +64,18 @@ export class UsersService {
       usuario.role = role;
     }
 
+    if ( updateUserDto.first_name ) {
+      usuario.first_name = updateUserDto.first_name;
+    }
+
+    if ( updateUserDto.last_name ) {
+      usuario.last_name = updateUserDto.last_name;
+    }
+
+    if ( updateUserDto.username ) {
+      usuario.username = updateUserDto.username;
+    }
+
     if ( updateUserDto.password ) {
       const hashPassword = await bcryptjs.hash(updateUserDto.password, 10);
       usuario.password = hashPassword;
