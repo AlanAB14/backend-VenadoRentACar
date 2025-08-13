@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,7 +29,7 @@ export class UsersService {
       password: hashPassword,
       role,
       ...userData,
-      avatar: createUserDto.avatar_image ?? null,
+      avatar: createUserDto.avatar ?? null,
     });
 
     return await this.userRepository.save(user);
@@ -48,14 +48,15 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const usuario = await this.userRepository.findOneBy({ id });
     if ( !usuario ) throw new NotFoundException(`No existe usuario con id ${ id }`);
-    if (updateUserDto.avatar_image) {
+    console.log(updateUserDto.avatar, 'asd')
+    if (updateUserDto.avatar) {
       if (usuario.avatar) {
         const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', path.basename(usuario.avatar));
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
       }
-      usuario.avatar = updateUserDto.avatar_image;
+      usuario.avatar = updateUserDto.avatar;
     }
 
     if ( updateUserDto.role_id ) {
@@ -72,7 +73,23 @@ export class UsersService {
       usuario.last_name = updateUserDto.last_name;
     }
 
+    if ( updateUserDto.email ) {
+      const existente = await this.userRepository.findOne({
+        where: { email: updateUserDto.email }
+      });
+      if (existente && existente.id !== id) {
+        throw new BadRequestException(`Ya existe un usuario con el email '${updateUserDto.email}'`);
+      }
+      usuario.email = updateUserDto.email;
+    }
+
     if ( updateUserDto.username ) {
+      const existente = await this.userRepository.findOne({
+        where: { username: updateUserDto.username }
+      });
+      if (existente && existente.id !== id) {
+        throw new BadRequestException(`Ya existe un usuario con el username '${updateUserDto.username}'`);
+      }
       usuario.username = updateUserDto.username;
     }
 

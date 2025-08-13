@@ -13,7 +13,7 @@ export class MulterConfigService implements MulterOptionsFactory {
             let folder = './uploads/images';
             if (file.fieldname === 'icon') {
               folder = './uploads/icons';
-            } else if (file.fieldname === 'images' || file.fieldname === 'avatar_image' || file.fieldname === 'imageUrl') {
+            } else if (file.fieldname === 'images' || file.fieldname === 'avatar' || file.fieldname === 'imageUrl') {
               folder = './uploads/images';
             }
 

@@ -14,13 +14,13 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Roles('super_admin')
   @Post()
-  @UseInterceptors(FileInterceptor('avatar_image')) 
+  @UseInterceptors(FileInterceptor('avatar')) 
   async create(
     @Body() createUserDto: CreateUserDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<User> {
     if (file) {
-      createUserDto.avatar_image = `/uploads/images/${file.filename}`;
+      createUserDto.avatar = `/uploads/images/${file.filename}`;
     }
     return await this.usersService.create(createUserDto);
   }
@@ -42,15 +42,14 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Roles('super_admin')
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('avatar_image')) 
+  @UseInterceptors(FileInterceptor('avatar')) 
   async update(
     @Param('id') id: string, 
     @Body() updateUserDto: UpdateUserDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<User> {
-    console.log(file)
     if (file) {
-      updateUserDto.avatar_image = `/uploads/images/${file.filename}`;
+      updateUserDto.avatar = `/uploads/images/${file.filename}`;
     }
     return await this.usersService.update(+id, updateUserDto);
   }

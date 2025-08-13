@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 
 export class CreateUserDto {
@@ -13,6 +14,7 @@ export class CreateUserDto {
 
   @IsNumber()
   @IsNotEmpty()
+  @Type(() => Number)
   role_id: number;
 
   @IsEmail()
@@ -29,5 +31,5 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  avatar_image?: string;
+  avatar?: string;
 }

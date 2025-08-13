@@ -113,6 +113,10 @@ export class CarsService {
       car.other_features = otherFeatures;
     }
 
+    if (updateCarDto.availability) {
+      car.availability = updateCarDto.availability;
+    }
+
     if (userId) {
       const userUpdated = await this.userRepository.findOne({
         where: { id: userId },
