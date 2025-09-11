@@ -49,17 +49,6 @@ export class CarsService {
     }
 
     if (createCarDto.images) {
-      createCarDto.images.forEach((image) => {
-        const filePath = path.join(
-          __dirname,
-          '..',
-          '..',
-          'uploads',
-          'images',
-          path.basename(image),
-        );
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      });
       carEntity.images = createCarDto.images;
     }
 
@@ -82,7 +71,10 @@ export class CarsService {
     updateCarDto: UpdateCarDto,
     userId: number,
   ): Promise<Car> {
-    const car = await this.carRepository.findOneBy({ id });
+    const car = await this.carRepository.findOne({
+      where: { id },
+      relations: ['vehicle_type', 'other_features'],
+    });
     if (!car) throw new NotFoundException(`No se encontró auto con id ${id}`);
 
     if (updateCarDto.images) {
@@ -99,6 +91,19 @@ export class CarsService {
       car.images = updateCarDto.images;
     }
 
+    if (updateCarDto.availability) {
+      car.availability = updateCarDto.availability;
+    }
+
+    if (userId) {
+      const userUpdated = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+      car.updated_by = userUpdated;
+    }
+
+    Object.assign(car, updateCarDto);
+
     if (updateCarDto.vehicle_type && updateCarDto.vehicle_type.length > 0) {
       const vehicleTypes = await this.vehicleTypeRepository.findByIds(
         updateCarDto.vehicle_type,
@@ -112,19 +117,6 @@ export class CarsService {
       );
       car.other_features = otherFeatures;
     }
-
-    if (updateCarDto.availability) {
-      car.availability = updateCarDto.availability;
-    }
-
-    if (userId) {
-      const userUpdated = await this.userRepository.findOne({
-        where: { id: userId },
-      });
-      car.updated_by = userUpdated;
-    }
-
-    Object.assign(car, updateCarDto);
 
     return await this.carRepository.save(car);
   }

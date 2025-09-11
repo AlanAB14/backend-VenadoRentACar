@@ -11,6 +11,7 @@ import { VehicleTypesModule } from './vehicle_types/vehicle_types.module';
 import { AuthModule } from './auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterConfigService } from './common/middlewares/multer-configuration';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MulterConfigService } from './common/middlewares/multer-configuration';
       synchronize: true,
       timezone: '-03:00' //Zona horaria de Argentina
     }),
+    EventEmitterModule.forRoot(),
     RolesModule,
     UsersModule,
     ContactsModule,

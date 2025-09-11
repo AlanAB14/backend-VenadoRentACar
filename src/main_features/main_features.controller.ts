@@ -19,6 +19,11 @@ export class MainFeaturesController {
     return await this.mainFeaturesService.create(createMainFeatureDto, createMainFeatureDto.updated_by);
   }
 
+  @Get()
+  async findAll(): Promise<MainFeature[]> {
+    return await this.mainFeaturesService.findAll();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<MainFeature> {
     return await this.mainFeaturesService.findOne(+id);

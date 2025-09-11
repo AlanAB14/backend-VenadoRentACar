@@ -17,6 +17,11 @@ export class MainFeaturesService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  async findAll(): Promise<MainFeature[]> {
+    const mainFeatures = await this.mainFeaturesRepository.find(); 
+    return plainToClass(MainFeature, mainFeatures);
+  }
+
   async create(createMainFeatureDto: CreateMainFeatureDto, userId: number): Promise<MainFeature> {
     const mainFeatureEntity = plainToInstance(MainFeature, createMainFeatureDto);
     if (userId) {

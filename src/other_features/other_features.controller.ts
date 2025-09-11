@@ -21,7 +21,9 @@ export class OtherFeaturesController {
     @Body() createOtherFeatureDto: CreateOtherFeatureDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<OtherFeature> {
-    createOtherFeatureDto.icon = `/uploads/icons/${file.filename}`;
+    if (file) {
+      createOtherFeatureDto.icon = `/uploads/icons/${file.filename}`;
+    }
     return await this.otherFeaturesService.create(createOtherFeatureDto, createOtherFeatureDto.updated_by);
   }
 

@@ -26,19 +26,6 @@ export class OtherFeaturesService {
       otherFeatureEntity.updated_by = userUpdated;
     }
     if (createOtherFeatureDto.icon) {
-      const filePath = path.join(
-        __dirname,
-        '..',
-        '..',
-        'uploads',
-        'icons',
-        path.basename(createOtherFeatureDto.icon),
-      );
-
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-
       otherFeatureEntity.icon = createOtherFeatureDto.icon;
     }
     return await this.otherFeaturesRepository.save(otherFeatureEntity);

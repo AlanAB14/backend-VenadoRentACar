@@ -21,7 +21,7 @@ export class Car {
     @Column({ type: 'decimal', precision: 10, scale: 2 })
     price_per_day: number;
 
-    @Column({default: true})
+    @Column({ default: true})
     availability: boolean;
   
     @ManyToOne(() => MainFeature, { eager: true })

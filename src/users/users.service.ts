@@ -48,7 +48,6 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const usuario = await this.userRepository.findOneBy({ id });
     if ( !usuario ) throw new NotFoundException(`No existe usuario con id ${ id }`);
-    console.log(updateUserDto.avatar, 'asd')
     if (updateUserDto.avatar) {
       if (usuario.avatar) {
         const filePath = path.join(__dirname, '..', '..', 'uploads', 'images', path.basename(usuario.avatar));

@@ -1,39 +1,45 @@
-import { Exclude } from "class-transformer";
-import { IsArray, IsDecimal, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Type, Transform } from 'class-transformer';
+import { IsArray, IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCarDto {
-    @IsNotEmpty()
-    @IsString()
-    name: string;
-  
-    @IsString()
-    @IsOptional()
-    description?: string;
+  @IsNotEmpty() @IsString() name: string;
 
-    @IsOptional()
-    @IsString({ each: true })
-    @IsArray()
-    images?: string[];
-  
-    @IsNotEmpty()
-    @IsNumber()
-    price_per_day: number;
-  
-    @IsOptional()
-    @IsNumber()
-    main_features?: number;
-  
-    @IsOptional()
-    @IsArray()
-    @IsNumber({}, { each: true })
-    other_features?: number[];
-  
-    @IsNotEmpty()
-    @IsArray()
-    @IsNumber({}, { each: true })
-    vehicle_type: number[];
-  
-    @IsNotEmpty()
-    @IsNumber()
-    updated_by: number;
+  @IsOptional() @IsString() description?: string;
+
+  @Transform(({ value }) => value === 'true' || value === true || value === 1 || value === '1')
+  @IsBoolean()
+  availability: boolean;
+
+  @IsOptional() @IsArray() @IsString({ each: true }) images?: string[];
+
+  @Transform(({ value }) => value === '' || value == null ? undefined : value)
+  @Type(() => Number)
+  @IsNumber()
+  price_per_day: number;
+
+  @IsOptional()
+  @Transform(({ value }) => value === '' || value == null ? undefined : value)
+  @Type(() => Number)
+  @IsInt()
+  main_features?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => value == null || value === '' ? [] : (Array.isArray(value) ? value : [value]))
+  @Type(() => Number)
+  @IsInt({ each: true })
+  @IsArray()
+  other_features?: number[];
+
+  @IsNotEmpty()
+  @Transform(({ value }) => value == null || value === '' ? [] : (Array.isArray(value) ? value : [value]))
+  @Type(() => Number)
+  @IsInt({ each: true })
+  @IsArray()
+  vehicle_type: number[];
+
+  @Transform(({ value }) => value === '' || value == null ? undefined : value)
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  updated_by: number;
 }

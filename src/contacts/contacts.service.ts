@@ -3,6 +3,7 @@ import { CreateContactDto } from './dto/create-contact.dto';
 import { Contact } from './entities/contact.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class ContactsService {
@@ -10,11 +11,14 @@ export class ContactsService {
   constructor(
     @InjectRepository(Contact)
     private readonly contactRepository: Repository<Contact>,
+    private readonly events: EventEmitter2,
   ) {}
 
 
   async create(createContactDto: CreateContactDto): Promise<Contact> {
-    return await this.contactRepository.save(createContactDto);
+    const saved = await this.contactRepository.save(createContactDto);
+    this.events.emit('contact.created', saved);
+    return saved;
   }
 
   async findAll(): Promise<Contact[]> {
