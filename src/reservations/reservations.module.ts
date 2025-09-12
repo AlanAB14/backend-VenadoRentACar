@@ -4,9 +4,10 @@ import { ReservationsController } from './reservations.controller';
 import { Reservation } from './entities/reservation.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CarsModule } from 'src/cars/cars.module';
+import { UserNotificationsModule } from 'src/user_notifications/user_notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reservation]), CarsModule],
+  imports: [TypeOrmModule.forFeature([Reservation]), CarsModule, UserNotificationsModule],
   controllers: [ReservationsController],
   providers: [ReservationsService],
 })

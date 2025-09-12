@@ -6,6 +6,7 @@ import { Reservation } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
 import { Car } from 'src/cars/entities/car.entity';
 import { ReservationResponseDto } from './dto/response-reservation.dto';
+import { UserNotificationsService } from 'src/user_notifications/user_notifications.service';
 
 @Injectable()
 export class ReservationsService {
@@ -14,7 +15,8 @@ export class ReservationsService {
     @InjectRepository(Reservation)
     private readonly reservationRepository: Repository<Reservation>,
     @InjectRepository(Car)
-    private readonly carRepository: Repository<Car>
+    private readonly carRepository: Repository<Car>,
+    private readonly userNotificationsService: UserNotificationsService,
   ) {}
 
   async create(createReservationDto: CreateReservationDto) {
@@ -43,6 +45,11 @@ export class ReservationsService {
     const reservationNumber = `RN-${savedReservation.id.toString().padStart(7, '0')}`; // Ejemplo: RN-000001
     savedReservation.reservation_number = reservationNumber;
     await this.reservationRepository.save(savedReservation);
+
+    await this.userNotificationsService.create({
+      type: 'reserva',
+      user: createReservationDto.name,
+    });
 
     return { reservation_code: reservationNumber };
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserNotificationDto } from './dto/create-user_notification.dto';
 import { UpdateUserNotificationDto } from './dto/update-user_notification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -33,7 +33,9 @@ export class UserNotificationsService {
     return `This action updates a #${id} userNotification`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userNotification`;
+  async remove(id: number) {
+    const notif = await this.userNotificationRepository.findOneBy({ id });
+    if (!notif) throw new NotFoundException(`No se encontro notificacion con id ${ id }`);
+    return await this.userNotificationRepository.delete(id);
   }
 }
