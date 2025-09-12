@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterConfigService } from './common/middlewares/multer-configuration';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { UserNotificationsModule } from './user_notifications/user_notifications.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     OtherFeaturesModule,
     VehicleTypesModule,
     AuthModule,
+    UserNotificationsModule,
   ],
   controllers: [],
   providers: [],

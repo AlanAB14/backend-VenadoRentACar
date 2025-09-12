@@ -3,10 +3,10 @@ import { ContactsService } from './contacts.service';
 import { ContactsController } from './contacts.controller';
 import { Contact } from './entities/contact.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { NotificationsModule } from 'src/notifications/notifications.module';
+import { UserNotificationsModule } from 'src/user_notifications/user_notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Contact]), NotificationsModule],
+  imports: [TypeOrmModule.forFeature([Contact]), UserNotificationsModule],
   controllers: [ContactsController],
   providers: [ContactsService],
 })
