@@ -27,6 +27,11 @@ export class UserNotificationsController {
     return this.userNotificationsService.update(+id, updateUserNotificationDto);
   }
 
+  @Post(':id/read')
+  markAsRead(@Param('id') id: string, @Body() body: {userId: number}) {
+    return this.userNotificationsService.markAsRead(+id, body.userId);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userNotificationsService.remove(+id);

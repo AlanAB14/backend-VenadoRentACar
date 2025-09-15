@@ -65,6 +65,7 @@ export class ReservationsService {
       'reservation.name',
       'reservation.email',
       'reservation.phone',
+      'reservation.reservation_number',
       'car.name',
     ])
     .getRawMany();
@@ -78,6 +79,7 @@ export class ReservationsService {
     name: res.reservation_name,
     email: res.reservation_email,
     phone: res.reservation_phone,
+    reservation_number: res.reservation_reservation_number,
     car_name: res.car_name, // El nombre del auto
     }));
   }
